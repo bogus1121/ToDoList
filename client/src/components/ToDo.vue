@@ -1,7 +1,9 @@
 <template>
+    <v-layout> 
+        <v-flex xs6 offset-xs3 class="mt-16 pt-16">
             <base-card title="Todos">
                 <todo-form></todo-form>
-                <!-- <v-simple-table
+                <v-simple-table
                     fixed-header
                     height="300px"
                 >
@@ -16,17 +18,18 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr
+                        <!-- <tr
                         v-for="item in desserts"
                         :key="item.name"
                         >
                             <td>{{ item.name }}</td>
                             <td>{{ item.calories }}</td>
-                        </tr>
+                        </tr> -->
                     </tbody>
-                </v-simple-table> -->
+                </v-simple-table>
             </base-card>
-
+        </v-flex>
+    </v-layout>
 </template>
 
 <script>

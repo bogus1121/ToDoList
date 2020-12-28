@@ -1,13 +1,32 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <router-view/>
+    <v-app>
+      <!-- <v-navigation-drawer app>
+      </v-navigation-drawer> -->
+
+      <the-header></the-header>
+
+      <v-main>
+        <v-container fluid class="pt-16">
+          <router-view></router-view>
+        </v-container>
+      </v-main>
+
+      <the-footer></the-footer>
+    </v-app>
   </div>
 </template>
 
 <script>
+import TheHeader from '@/components/TheHeader.vue'
+import TheFooter from '@/components/TheFooter.vue'
+
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+    TheHeader,
+    TheFooter
+  }
 }
 </script>
 
@@ -18,6 +37,9 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  background-color: #f5f0e1;
+  /* margin-top: 60px; */
+
+  /* colors: #1e3d59, #f5f0e1, #ff6e40, #ffc13b */
 }
 </style>
