@@ -7,7 +7,6 @@ module.exports = {
         options: {
             dialect: process.env.DIALECT || 'sqlite',
             host: process.env.HOST || 'localhost',
-            // port: process.env.PORT || 3306,
             storage: './todos.sqlite'
         }
     },

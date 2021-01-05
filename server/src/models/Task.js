@@ -1,18 +1,16 @@
-const sequelize = require('./index')
+const { Sequelize, Model, DataTypes } = require('sequelize');
 
-Task = (sequelize, DataTypes) => {
-    const Task  = sequelize.define('Task', {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            allowNull: false,
-            primaryKey: true
-        },
-        taskName: DataTypes.STRING,
-        priority: DataTypes.INTEGER
-    })
-    
-    return Task
-}
+const sequelize = require('../util/database')
+
+const Task = sequelize.define('Task', {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true
+    },
+    taskName: DataTypes.STRING,
+    priority: DataTypes.INTEGER
+});
 
 module.exports = Task;

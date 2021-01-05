@@ -1,4 +1,4 @@
-const {Todo} = require('../models')
+const Task = require('../models/Task')
 
 module.exports = {
     async index (req, res) {
@@ -23,16 +23,48 @@ module.exports = {
     //         })
     //     }
     // },
+
     async post (req, res) {
-        try {
-            await Todo.create(req.body).then(result => {console.log(result)}).catch(err =>{console.log(err);})
-            // console.log(req.body);
-            // const todo = await Todo.create(req.body)
-            res.send(todo)
-        } catch (err) {
-            res.status(500).send({
-                error: 'An error has occured trying to create the data'
-            })
-        }
+        console.log(req.body);
+        const taskName = req.body.task
+        const taskPriority = req.body.priority
+        
+        await Task.create({
+            taskName: taskName,
+            priority: taskPriority
+        })
+        .then(result => {console.log(result);
+        })
+        .catch(err => {
+            console.log(err);
+        })
+        // try {
+        //     // const todo = await Todo.create(req.body)
+        //     // console.log(todo);
+        //     // res.send(todo)
+        // } catch (err) {
+        //     res.status(500).send({
+        //         error: 'An error has occured trying to create the data'
+        //     })
+        // }
     }
+
+
+
+    // async post (req, res) {
+        
+    //     const taskName = req
+    //     console.log("this is a task name: " + taskName);
+    //     res.send(taskName.body)
+    //     try {
+    //         // await Todo.create(req.body).then(result => {console.log(result)}).catch(err =>{console.log(err);})
+    //         const todo = await Todo.create(req.body)
+    //         console.log("this is a task name: " + req.body);
+    //         res.send(todo)
+    //     } catch (err) {
+    //         res.status(500).send({
+    //             error: 'An error has occured trying to create the data'
+    //         })
+    //     }
+    // }
 }
