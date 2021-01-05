@@ -1,10 +1,11 @@
 <template>
-    <form @submit.prevent="submit">
+    <form @submit.prevent="addTodo">
         <v-col
           md="10"
         >
             <v-layout class="align-center">
                 <v-text-field
+                v-model="todo.task"
                 label="Outlined"
                 outlined
                 hide-details
@@ -25,19 +26,26 @@
 </template>
 
 <script>
+import TodosService from '@/services/TodosService'
+
 export default {
     data () {
         return {
-            todo: ['']
+            todo: {
+                task: null,
+                priority: 5,
+            }
         }
     },
     methods: {
-        submit () {
-            todo.push
+        async addTodo () {
+            try {
+                await TodosService.post(this.todo)
+            } catch (err) {
+                console.log(err);
+            }
         },
-        clear () {
-
-        }
-    }
+        // clear () {}
+    },
 }
 </script>

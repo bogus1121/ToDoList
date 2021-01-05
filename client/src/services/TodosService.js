@@ -1,14 +1,14 @@
 import Api from '@/services/Api'
 
 export default {
-    async post (song) {
-        return await Api().post('songs', song)
+    async post (todo) {
+        return await Api().post('todos', todo)
     },
     async index () {
-        const { data } = await Api().get('songs')
+        const { data } = await Api().get('todos')
         return data
     },
-    show (songId) {
-        return Api().get(`songs/${songId}`)
-    }
+    // show (songId) {
+    //     return Api().get(`songs/${songId}`)
+    // }
 }
