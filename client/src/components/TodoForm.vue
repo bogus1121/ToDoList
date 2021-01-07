@@ -6,7 +6,7 @@
             <v-layout class="align-center">
                 <v-text-field
                 v-model="todo.task"
-                label="Outlined"
+                label="Type here your todo"
                 outlined
                 hide-details
                 dense
@@ -18,10 +18,15 @@
                     submit
                 </v-btn>
             </v-layout>
+            <v-slider
+                v-model="todo.priority"
+                label="Priority"
+                step="1"
+                max="5"
+                thumb-label
+                ticks
+            ></v-slider>
         </v-col>
-      <!-- <v-btn @click="clear">
-        clear
-      </v-btn> -->
     </form>
 </template>
 
@@ -33,7 +38,7 @@ export default {
         return {
             todo: {
                 task: null,
-                priority: 5,
+                priority: 1
             }
         }
     },
@@ -41,11 +46,14 @@ export default {
         async addTodo () {
             try {
                 await TodosService.post(this.todo)
+                this.todo = await TodosService.index()
+                console.log(this.todo);
             } catch (err) {
                 console.log(err);
             }
+            this.todo.task = null,
+            this.todo.priority = 1
         },
-        // clear () {}
     },
 }
 </script>
