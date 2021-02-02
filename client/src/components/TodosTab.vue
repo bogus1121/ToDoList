@@ -1,44 +1,38 @@
 <template>
     <v-layout>
-        <v-simple-table
-            fixed-header
-            height="300px"
-        >
-            <thead>
-                <tr>
-                    <th class="text-left">
-                        Nr.
-                    </th>
-                    <th class="text-center">
-                        To Do:
-                    </th>
-                    <th class="text-left">
-                        Priority
-                    </th>
-                    <th class="text-left">
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr
-                v-for="todo in todos"
-                :key="todo.id"
-                >
-                    <td>{{ todo.id }}</td>
-                    <td>{{ todo.taskName }}</td>
-                    <td>{{ todo.priority }}</td>
-                    <td>
-                        <v-btn
-                            x-small
-                            fab
-                            outlined
-                            color="success"
-                            >
-                        <v-icon>
-                            mdi-check-underline
-                        </v-icon>
-                        </v-btn>
-                        <v-col cols="auto">
+        <v-container fluid>
+            <v-simple-table
+                fixed-header
+                height="auto"
+            >
+                <thead>
+                    <tr>
+                        <!-- <th class="text-center">
+                            Nr.
+                        </th> -->
+                        <th class="text-center">
+                            To Do:
+                        </th>
+                        <th class="text-center">
+                            Priority
+                        </th>
+                        <th class="text-center">
+                            Edit
+                        </th>
+                        <th class="text-center">
+                            Done
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                    v-for="todo in todos"
+                    :key="todo.id"
+                    >
+                        <!-- <td>{{ todo.id }}</td> -->
+                        <td>{{ todo.taskName }}</td>
+                        <td>{{ todo.priority }}</td>
+                        <td>
                             <v-dialog transition="dialog-bottom-transition" max-width="600">
                                 <template v-slot:activator="{ on, attrs }">
                                     <v-btn
@@ -47,8 +41,7 @@
                                     outlined
                                     color="primary"
                                     v-bind="attrs"
-                                    v-on="on"
-                                    >
+                                    v-on="on">
                                         <v-icon>mdi-pencil</v-icon>
                                     </v-btn>
                                 </template>
@@ -65,9 +58,9 @@
                                                     dense
                                                 ></v-text-field>
                                                 <v-btn
-                                                    class="mr-4"
-                                                    type="submit"
-                                                >
+                                                class="mr-4"
+                                                type="submit"
+                                                @click="editTask(todo.id)">
                                                     submit
                                                 </v-btn>
                                             </v-layout>
@@ -86,39 +79,66 @@
                                     </v-card>
                                 </template>
                             </v-dialog>
-                        </v-col>
-                    </td>
-                </tr>
-            </tbody>
-        </v-simple-table>
+                        </td>
+                        <td>
+                            <v-btn
+                                x-small
+                                fab
+                                outlined
+                                color="success"
+                                @click="removeTask(todo.id)"
+                                >
+                            <v-icon>
+                                mdi-check-underline
+                            </v-icon>
+                            </v-btn>
+                        </td>
+                    </tr>
+                </tbody>
+            </v-simple-table>
+        </v-container>
     </v-layout>
 </template>
 
 <script>
-import TodosService from '../services/TodosService'
+import TodosService from '@/services/TodosService'
 
 export default {
-    data () {
-            return {
-                    todos: null
-        }
-    },
+    props: [
+        'todos'
+    ],
     methods: {
-        async remove () {
+        async editTask (id) {
             try {
-                await TodosService.remove(this.todo)
+                const updatedTask = this.findIndex(id)
+                await TodosService.edit(updatedTask)
             } catch (err) {
                 console.log(err);
             }
-            this.todo.task = null,
-            this.todo.priority = 1
         },
-        async loadTodos () {
-            this.todos = await TodosService.index()
+        async removeTask (id) {
+            try {
+                const removeTask = this.findIndex(id)
+                await TodosService.remove(removeTask.id)
+                for (let i = 0; i < this.todos.length; i++)
+                    if (this.todos[i].id === removeTask.id) {
+                        this.todos.splice(i,1);
+                        break;
+                    }
+            } catch (err) {
+                console.log(err);
+            }
+        },
+        findIndex (taskId) {
+            const foundTask = this.todos.find(({ id }) => id === taskId)
+            return foundTask
         }
     },
-    async mounted () {
-        await loadTodos()
+    computed: {
+        closeDialog () {
+            console.log("XD")
+            dialog.value = false
+        }
     }
 }
 </script>

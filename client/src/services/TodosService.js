@@ -1,17 +1,20 @@
 import Api from '@/services/Api'
 
 export default {
-    async post (todo) {
-        return await Api().post('todos', todo)
+    async post (loadTodo) {
+        const { data } = await Api().post('todos', loadTodo)
+        return data
     },
-        // async remove (todo) {
-    //     return await Api().post('todos', todo)
-    // },
-    // async edit (todo) {
-    //     return await Api().post('todos', todo)
-    // },
-    async index () {
-        const { data } = await Api().get('todos')
+    async index (userId) {
+        const { data } = await Api().get(`todos/${userId}`)
+        return data
+    },
+    async edit (updatedTask) {
+        const { data } = await Api().put(`todos/${updatedTask.id}`, updatedTask)
+        return data
+    },
+    async remove (id) {
+        const { data } = await Api().delete(`todos/${id}`)
         return data
     },
     // show (songId) {

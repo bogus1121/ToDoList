@@ -1,15 +1,22 @@
-const { Sequelize, Model, DataTypes } = require('sequelize');
+const { DataTypes } = require('sequelize');
 
 const sequelize = require('../util/database')
 
 const Task = sequelize.define('Task', {
     id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
         primaryKey: true
     },
-    taskName: DataTypes.STRING,
+    userId: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true
+    },
+    taskName: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
     priority: DataTypes.INTEGER
 });
 

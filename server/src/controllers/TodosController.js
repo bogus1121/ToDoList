@@ -1,31 +1,38 @@
 const Task = require('../models/Task')
+const uuid = require('uuid')
+console.log(uuid.v4());
+
 
 module.exports = {
     async index (req, res) {
         try {
-            const tasks = await Task.findAll() //{limit: 10}
+            const tasks = await Task.findAll(
+                { where : { userId: req.params.userId } }
+            ) //{limit: 10}
             const arrTasks = Object.assign([], tasks)
-            console.log(arrTasks);
             res.send(arrTasks.reverse())
         } catch (err) {
             res.status(500).send({
-                error: 'An error has occured trying to load tasks'
+                err: 'An error has occured trying to load tasks'
             })
         }
     },
-    async show (req, res) {
+
+    async update (req, res) {
         try {
             const editedTask = await Task.update(
-                { taskName: req.body.task },
-                { where : { _id: req.params.id } }
+                {
+                    taskName: req.body.taskName,
+                    priority: req.body.priority
+                },
+                { where : { id: req.params.id } }
             )
-            handleResoult(editedTask)
             res.send(editedTask)
             // const songs = await Song.findByPk(req.params.songId)
             // res.send(songs)
         } catch (err) {
             res.status(500).send({
-                error: 'An error has occured trying to load the task'
+                err: 'An error has occured trying to update the task'
             })
         }
     },
@@ -33,16 +40,30 @@ module.exports = {
     async post (req, res) {
         try {
             const task = await Task.create({
+                id: uuid.v4(),
+                userId: req.body.userId,
                 taskName: req.body.task,
                 priority: req.body.priority
             })
-            console.log(task);
-            console.log(task.id)
-            res.send(task.updatedAt)
+            res.send(task)
         } catch (err) {
             res.status(500).send({
-                error: 'An error has occured trying to create the data'
+                err: 'An error has occured trying to create the data'
             })
         }
-    }
+    },
+
+    async remove (req, res) {
+        try {
+            await Task.destroy(
+                { where : { id: req.params.id } }
+            )
+            await res.sendStatus(204)
+        } catch (err) {
+            console.log("XD");
+            res.status(500).send({
+                err: 'An error has occured trying to update the task'
+            })
+        }
+    },
 }

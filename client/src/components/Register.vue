@@ -27,7 +27,8 @@
                     v-html="error">
                 </div>
                 <v-btn 
-                    @click="login" 
+                    @click="register"
+                    
                     color="#1e3d59"
                     dark>
                         Register
@@ -38,6 +39,7 @@
 </template>
 
 <script>
+import AuthenticationService from '@/services/AuthenticationService'
 import BaseCard from '@/components/BaseCard'
 
 export default {
@@ -45,12 +47,22 @@ export default {
         return {
             email: '',
             password: '',
-            error: null
+            error: null,
         }
     },
     methods: {
-        login() {
-
+        async register() {
+            try{
+              const response = await AuthenticationService.register({
+                email: this.email,
+                password: this.password
+            })
+            this.error = null
+            this.$store.dispatch('setToken', response.data.token)
+            this.$store.dispatch('setUser', response.data.user)
+          } catch (error) {
+            this.error = error.response.data.error
+          }
         }
     },
     components: {

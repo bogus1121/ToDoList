@@ -1,7 +1,5 @@
 <template>
-            <base-card title="Hello my dear">
-            </base-card>
-
+    <base-card title="Hello my dear"/>
 </template>
 
 <script>

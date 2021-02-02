@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="addTodo">
+    <form @submit.prevent="addTodo" v-on:keyup.enter="addTodo">
         <v-col
           md="10"
         >
@@ -24,8 +24,10 @@
                 step="1"
                 max="5"
                 thumb-label
-                ticks
             ></v-slider>
+            <v-alert type="warning" v-if="fieldFilled">
+                Please, write some todo...
+            </v-alert>
         </v-col>
     </form>
 </template>
@@ -34,26 +36,28 @@
 import TodosService from '@/services/TodosService'
 
 export default {
+    emits: ['task-created'],
     data () {
         return {
             todo: {
-                task: null,
-                priority: 1
-            }
+                task: '',
+                priority: 1,
+                userId: this.$store.state.user.id
+            },
+            fieldFilled: false,
         }
     },
     methods: {
         async addTodo () {
-            try {
-                await TodosService.post(this.todo)
-                this.todo = await TodosService.index()
-                console.log(this.todo);
-            } catch (err) {
-                console.log(err);
+                try {
+                    const task = await TodosService.post(this.todo)
+                    this.$emit('task-created', task)
+                } catch (err) {
+                    console.log(err);
+                }
+                this.todo.task = '',
+                this.todo.priority = 1
             }
-            this.todo.task = null,
-            this.todo.priority = 1
         },
-    },
-}
+    }
 </script>

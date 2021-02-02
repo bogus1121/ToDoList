@@ -3,6 +3,7 @@
         <v-flex xs6 offset-xs3 class="mt-16 pt-16">
             <base-card title="Login">
                 <v-text-field
+                    v-if="!$store.state.isUserLoggedIn"
                     v-model="email"
                     name="email"
                     label="Email..."
@@ -13,6 +14,7 @@
                     dense
                 ></v-text-field>
                 <v-text-field
+                    v-if="!$store.state.isUserLoggedIn"
                     v-model="password"
                     name="password"
                     label="Password..."
@@ -22,15 +24,24 @@
                     outlined
                     dense
                 ></v-text-field>
-                <div 
+                <div
+                    v-if="!$store.state.isUserLoggedIn"
                     class="error mb-2 pl-1 pr-1" 
                     v-html="error">
                 </div>
                 <v-btn 
-                    @click="login" 
+                    v-if="!$store.state.isUserLoggedIn"
+                    @click="login"
                     color="#1e3d59"
                     dark>
                         Login
+                </v-btn>
+                <v-btn
+                    v-if="$store.state.isUserLoggedIn"
+                    to="todo"
+                    color="#1e3d59"
+                    dark>
+                        Go to TODOS!
                 </v-btn>
             </base-card>
         </v-flex>
@@ -38,6 +49,7 @@
 </template>
 
 <script>
+import AuthenticationService from '@/services/AuthenticationService'
 import BaseCard from '@/components/BaseCard'
 
 export default {
@@ -45,12 +57,22 @@ export default {
         return {
             email: '',
             password: '',
-            error: null
+            error: null,
         }
     },
     methods: {
-        login() {
-
+        async login() {
+          try{
+            const response = await AuthenticationService.login({
+                email: this.email,
+                password: this.password
+                })
+            this.$store.dispatch('setToken', response.data.token)
+            this.$store.dispatch('setUser', response.data.user)
+            this.error = null
+            }   catch (error) {
+            this.error = error.response.data.error
+          }
         }
     },
     components: {
