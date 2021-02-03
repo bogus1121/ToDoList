@@ -1,9 +1,6 @@
 <template>
   <div id="app">
     <v-app>
-      <!-- <v-navigation-drawer app>
-      </v-navigation-drawer> -->
-
       <the-header></the-header>
 
       <v-main>
@@ -18,8 +15,8 @@
 </template>
 
 <script>
-import TheHeader from '@/components/TheHeader.vue'
-import TheFooter from '@/components/TheFooter.vue'
+import TheHeader from '@/components/UI/TheHeader.vue'
+import TheFooter from '@/components/UI/TheFooter.vue'
 
 export default {
   name: 'App',

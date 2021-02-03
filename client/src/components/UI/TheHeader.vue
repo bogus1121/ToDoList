@@ -5,7 +5,9 @@
         elevate-on-scroll
         scroll-target="#scrolling-techniques-7"
     >
-    <v-toolbar-title>ToDoApp</v-toolbar-title>
+    <v-toolbar-title to="todo">
+        ToDoApp
+    </v-toolbar-title>
 
     <v-spacer></v-spacer>
 

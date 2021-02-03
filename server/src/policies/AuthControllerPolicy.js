@@ -20,7 +20,7 @@ module.exports = {
                     break
                 case 'password':
                     res.status(400).send({
-                        error: 'You must provide a valid password'
+                        error: 'You must provide a valid password which contains char from a to z, and capital letters Z to A, also number from 0 to 9 and its long at least 8 to 32 char'
                     })
                     break
                 default:

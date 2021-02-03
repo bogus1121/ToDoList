@@ -13,9 +13,9 @@
 
 <script>
 import TodosService from '../services/TodosService'
-import BaseCard from '@/components/BaseCard'
-import TodoForm from '@/components/TodoForm'
-import TodosTab from '@/components/TodosTab'
+import BaseCard from '@/components/UI/BaseCard'
+import TodoForm from '@/components/Todo/TodoForm'
+import TodosTab from '@/components/Todo/TodosTab'
 
 export default {
   components: {

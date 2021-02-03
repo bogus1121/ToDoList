@@ -31,7 +31,15 @@
                     >
                         <!-- <td>{{ todo.id }}</td> -->
                         <td>{{ todo.taskName }}</td>
-                        <td>{{ todo.priority }}</td>
+                        <!-- <td>{{ todo.priority }}</td> -->
+                        <td>
+                            <v-chip
+                                :color="getColor(todo.priority).color"
+                                dark
+                            >
+                                {{ getColor(todo.priority).text }}
+                            </v-chip>
+                        </td>
                         <td>
                             <v-dialog transition="dialog-bottom-transition" max-width="600">
                                 <template v-slot:activator="{ on, attrs }">
@@ -132,13 +140,40 @@ export default {
         findIndex (taskId) {
             const foundTask = this.todos.find(({ id }) => id === taskId)
             return foundTask
+        },
+        getColor(priority) {
+            if (priority < 2) {
+                return {
+                    color: "lime darken-1",
+                    text: "very low"
+                }
+            } else if (priority === 2) {
+                return {
+                    color: "yellow lighten-1",
+                    text: "Low"
+                }
+            } else if (priority === 3) {
+                return {
+                    color: "amber",
+                    text: "Medium"
+                }
+            } else if (priority === 4 ) {
+                return {
+                    color: "orange darken-1",
+                    text: "High"
+                }
+            } else {
+                return {
+                    color: "red",
+                    text: "Very high"
+                }
+            }
         }
     },
     computed: {
         closeDialog () {
-            console.log("XD")
             dialog.value = false
-        }
+        },
     }
 }
 </script>

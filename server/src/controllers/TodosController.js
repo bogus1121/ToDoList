@@ -28,8 +28,6 @@ module.exports = {
                 { where : { id: req.params.id } }
             )
             res.send(editedTask)
-            // const songs = await Song.findByPk(req.params.songId)
-            // res.send(songs)
         } catch (err) {
             res.status(500).send({
                 err: 'An error has occured trying to update the task'
@@ -60,7 +58,6 @@ module.exports = {
             )
             await res.sendStatus(204)
         } catch (err) {
-            console.log("XD");
             res.status(500).send({
                 err: 'An error has occured trying to update the task'
             })

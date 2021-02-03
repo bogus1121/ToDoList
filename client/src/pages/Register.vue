@@ -1,7 +1,7 @@
 <template>
     <v-layout> 
         <v-flex xs6 offset-xs3 class="mt-16 pt-16">
-            <base-card title="Login">
+            <base-card title="Register">
                 <v-text-field
                     v-if="!$store.state.isUserLoggedIn"
                     v-model="email"
@@ -24,17 +24,21 @@
                     outlined
                     dense
                 ></v-text-field>
-                <div
-                    v-if="!$store.state.isUserLoggedIn"
-                    class="error mb-2 pl-1 pr-1" 
-                    v-html="error">
-                </div>
+                <v-alert
+                v-if="error"
+                border="bottom"
+                colored-border
+                type="warning"
+                elevation="2"
+                >
+                {{error}}
+                </v-alert>
                 <v-btn 
+                    @click="register"
                     v-if="!$store.state.isUserLoggedIn"
-                    @click="login"
                     color="#1e3d59"
                     dark>
-                        Login
+                        Register
                 </v-btn>
                 <v-btn
                     v-if="$store.state.isUserLoggedIn"
@@ -50,7 +54,7 @@
 
 <script>
 import AuthenticationService from '@/services/AuthenticationService'
-import BaseCard from '@/components/BaseCard'
+import BaseCard from '@/components/UI/BaseCard'
 
 export default {
     data () {
@@ -61,16 +65,17 @@ export default {
         }
     },
     methods: {
-        async login() {
-          try{
-            const response = await AuthenticationService.login({
+        async register() {
+            try{
+              const response = await AuthenticationService.register({
                 email: this.email,
                 password: this.password
-                })
-            this.$store.dispatch('setToken', response.data.token)
-            this.$store.dispatch('setUser', response.data.user)
+            })
+            console.log(response);
             this.error = null
-            }   catch (error) {
+            this.$store.dispatch('setToken', response.token)
+            this.$store.dispatch('setUser', response.user)
+          } catch (error) {
             this.error = error.response.data.error
           }
         }

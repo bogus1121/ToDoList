@@ -20,11 +20,13 @@
             </v-layout>
             <v-slider
                 v-model="todo.priority"
+                :color="sliderColor.color"
                 label="Priority"
                 step="1"
                 max="5"
                 thumb-label
-            ></v-slider>
+            >
+            </v-slider>
             <v-alert type="warning" v-if="fieldFilled">
                 Please, write some todo...
             </v-alert>
@@ -49,15 +51,46 @@ export default {
     },
     methods: {
         async addTodo () {
-                try {
-                    const task = await TodosService.post(this.todo)
-                    this.$emit('task-created', task)
-                } catch (err) {
-                    console.log(err);
-                }
-                this.todo.task = '',
-                this.todo.priority = 1
+            try {
+                const task = await TodosService.post(this.todo)
+                this.$emit('task-created', task)
+            } catch (err) {
+                console.log(err);
             }
-        },
+            this.todo.task = '',
+            this.todo.priority = 1
+        }
+    },
+    computed: {
+        sliderColor () {
+            if (this.todo.priority < 2) {
+                return {
+                    color: 'lime darken-1',
+                    text: "Very high"
+                }
+            } else if (this.todo.priority === 2) {
+                return {
+                    color: 'yellow lighten-1',
+                    text: "Very high"
+                }
+            } else if (this.todo.priority === 3) {
+                return {
+                    color: 'amber',
+                    text: "Very high"
+                }
+            } else if (this.todo.priority === 4) {
+                return {
+                    color: 'orange darken-1',
+                    text: "Very high"
+                }
+            } else {
+                return {
+                    color: "red",
+                    text: "Very high"
+                }
+            }
+        }
     }
+}
+
 </script>
