@@ -1,8 +1,9 @@
 <template>
-    <v-layout> 
+    <v-layout>
         <v-flex xs6 offset-xs3 class="mt-16 pt-16">
             <base-card title="Register">
                 <v-text-field
+                    @keyup.enter="register"
                     v-if="!$store.state.isUserLoggedIn"
                     v-model="email"
                     name="email"
@@ -14,6 +15,7 @@
                     dense
                 ></v-text-field>
                 <v-text-field
+                    @keyup.enter="register"
                     v-if="!$store.state.isUserLoggedIn"
                     v-model="password"
                     name="password"
@@ -25,27 +27,32 @@
                     dense
                 ></v-text-field>
                 <v-alert
-                v-if="error"
-                border="bottom"
-                colored-border
-                type="warning"
-                elevation="2"
+                    v-if="error"
+                    border="bottom"
+                    colored-border
+                    type="warning"
+                    elevation="2"
                 >
-                {{error}}
+                    {{ error }}
                 </v-alert>
-                <v-btn 
+                <v-btn
                     @click="register"
                     v-if="!$store.state.isUserLoggedIn"
                     color="#1e3d59"
-                    dark>
-                        Register
+                    dark
+                >
+                    Register
                 </v-btn>
-                <v-btn
-                    v-if="$store.state.isUserLoggedIn"
-                    to="todo"
-                    color="#1e3d59"
-                    dark>
-                        Go to TODOS!
+                <p
+                    v-if="!$store.state.isUserLoggedIn"
+                    class="text-end text--secondary text-decoration-none"
+                    >You have already account? Try to
+                    <router-link to="/login" class="text-decoration-none"
+                        >sign in</router-link
+                    >!</p
+                >
+                <v-btn to="todo" v-else color="#1e3d59" dark>
+                    Go to Todos!
                 </v-btn>
             </base-card>
         </v-flex>
@@ -53,35 +60,40 @@
 </template>
 
 <script>
-import AuthenticationService from '@/services/AuthenticationService'
-import BaseCard from '@/components/UI/BaseCard'
+import AuthenticationService from '@/services/AuthenticationService';
+import BaseCard from '@/components/UI/BaseCard';
 
 export default {
-    data () {
+    data() {
         return {
             email: '',
             password: '',
-            error: null,
-        }
+            error: null
+        };
     },
     methods: {
         async register() {
-            try{
-              const response = await AuthenticationService.register({
-                email: this.email,
-                password: this.password
-            })
-            console.log(response);
-            this.error = null
-            this.$store.dispatch('setToken', response.token)
-            this.$store.dispatch('setUser', response.user)
-          } catch (error) {
-            this.error = error.response.data.error
-          }
+            try {
+                const response = await AuthenticationService.register({
+                    email: this.email,
+                    password: this.password
+                });
+                localStorage.setItem('token', response.data.token);
+                localStorage.setItem(
+                    'user',
+                    JSON.stringify(response.data.user)
+                );
+                this.$store.dispatch('setToken', response.token);
+                this.$store.dispatch('setUser', response.user);
+                this.$router.replace('/todo');
+                this.error = null;
+            } catch (error) {
+                this.error = error.response.data.error;
+            }
         }
     },
     components: {
         BaseCard
     }
-}
+};
 </script>

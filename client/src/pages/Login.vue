@@ -1,8 +1,9 @@
 <template>
-    <v-layout> 
+    <v-layout>
         <v-flex xs6 offset-xs3 class="mt-16 pt-16">
             <base-card title="Login">
                 <v-text-field
+                    @keyup.enter="login"
                     v-if="!$store.state.isUserLoggedIn"
                     v-model="email"
                     name="email"
@@ -14,6 +15,7 @@
                     dense
                 ></v-text-field>
                 <v-text-field
+                    @keyup.enter="login"
                     v-if="!$store.state.isUserLoggedIn"
                     v-model="password"
                     name="password"
@@ -24,24 +26,33 @@
                     outlined
                     dense
                 ></v-text-field>
-                <div
-                    v-if="!$store.state.isUserLoggedIn"
-                    class="error mb-2 pl-1 pr-1" 
-                    v-html="error">
-                </div>
-                <v-btn 
+                <v-alert
+                    v-if="error"
+                    border="bottom"
+                    colored-border
+                    type="warning"
+                    elevation="2"
+                >
+                    {{ error }}
+                </v-alert>
+                <v-btn
                     v-if="!$store.state.isUserLoggedIn"
                     @click="login"
                     color="#1e3d59"
-                    dark>
-                        Login
+                    dark
+                >
+                    Login
                 </v-btn>
-                <v-btn
-                    v-if="$store.state.isUserLoggedIn"
-                    to="todo"
-                    color="#1e3d59"
-                    dark>
-                        Go to TODOS!
+                <p
+                    v-if="!$store.state.isUserLoggedIn"
+                    class="text-end text--secondary"
+                    >Or you can simply
+                    <router-link to="/register" class="text-decoration-none"
+                        >sign up</router-link
+                    >!</p
+                >
+                <v-btn to="todo" v-else color="#1e3d59" dark>
+                    Go to Todos!
                 </v-btn>
             </base-card>
         </v-flex>
@@ -49,35 +60,40 @@
 </template>
 
 <script>
-import AuthenticationService from '@/services/AuthenticationService'
-import BaseCard from '@/components/UI/BaseCard'
+import AuthenticationService from '@/services/AuthenticationService';
+import BaseCard from '@/components/UI/BaseCard';
 
 export default {
-    data () {
+    data() {
         return {
             email: '',
             password: '',
-            error: null,
-        }
+            error: null
+        };
     },
     methods: {
         async login() {
-            try{
+            try {
                 const response = await AuthenticationService.login({
                     email: this.email,
                     password: this.password
-                    })
-                    console.log(response);
-                this.$store.dispatch('setToken', response.data.token)
-                this.$store.dispatch('setUser', response.data.user)
-                this.error = null
-                }   catch (error) {
-                this.error = error.response.data.error
+                });
+                localStorage.setItem('token', response.data.token);
+                localStorage.setItem(
+                    'user',
+                    JSON.stringify(response.data.user)
+                );
+                this.$store.dispatch('setToken', response.data.token);
+                this.$store.dispatch('setUser', response.data.user);
+                this.$router.replace('/todo');
+                this.error = null;
+            } catch (error) {
+                this.error = error.response.data.error;
             }
         }
     },
     components: {
         BaseCard
     }
-}
+};
 </script>

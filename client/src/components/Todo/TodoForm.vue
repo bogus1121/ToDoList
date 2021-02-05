@@ -1,20 +1,16 @@
 <template>
-    <form @submit.prevent="addTodo" v-on:keyup.enter="addTodo">
-        <v-col
-          md="10"
-        >
-            <v-layout class="align-center">
+    <form @submit.prevent="addTodo">
+        <v-col md="12">
+            <v-layout class="align-baseline">
                 <v-text-field
-                v-model="todo.task"
-                label="Type here your todo"
-                outlined
-                hide-details
-                dense
+                    v-model="todo.task"
+                    label="Type here your todo"
+                    outlined
+                    dense
+                    :rules="[required]"
+                    required
                 ></v-text-field>
-                <v-btn
-                    class="mr-4"
-                    type="submit"
-                >
+                <v-btn class="ml-4" type="submit">
                     submit
                 </v-btn>
             </v-layout>
@@ -35,11 +31,11 @@
 </template>
 
 <script>
-import TodosService from '@/services/TodosService'
+import TodosService from '@/services/TodosService';
 
 export default {
     emits: ['task-created'],
-    data () {
+    data() {
         return {
             todo: {
                 task: '',
@@ -47,50 +43,49 @@ export default {
                 userId: this.$store.state.user.id
             },
             fieldFilled: false,
-        }
+            required: value => !!value || 'Required.'
+        };
     },
     methods: {
-        async addTodo () {
+        async addTodo() {
             try {
-                const task = await TodosService.post(this.todo)
-                this.$emit('task-created', task)
+                const task = await TodosService.post(this.todo);
+                this.$emit('task-created', task);
             } catch (err) {
                 console.log(err);
             }
-            this.todo.task = '',
-            this.todo.priority = 1
+            (this.todo.task = ''), (this.todo.priority = 1);
         }
     },
     computed: {
-        sliderColor () {
+        sliderColor() {
             if (this.todo.priority < 2) {
                 return {
                     color: 'lime darken-1',
-                    text: "Very high"
-                }
+                    text: 'Very high'
+                };
             } else if (this.todo.priority === 2) {
                 return {
                     color: 'yellow lighten-1',
-                    text: "Very high"
-                }
+                    text: 'Very high'
+                };
             } else if (this.todo.priority === 3) {
                 return {
                     color: 'amber',
-                    text: "Very high"
-                }
+                    text: 'Very high'
+                };
             } else if (this.todo.priority === 4) {
                 return {
                     color: 'orange darken-1',
-                    text: "Very high"
-                }
+                    text: 'Very high'
+                };
             } else {
                 return {
-                    color: "red",
-                    text: "Very high"
-                }
+                    color: 'red',
+                    text: 'Very high'
+                };
             }
         }
     }
-}
-
+};
 </script>
