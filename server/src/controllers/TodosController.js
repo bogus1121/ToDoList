@@ -8,8 +8,7 @@ module.exports = {
         where: { userId: req.params.userId },
         order: [["createdAt", "DESC"]],
       }); //{limit: 10}
-      const arrTasks = Object.assign([], tasks);
-      res.send(arrTasks);
+      res.send(tasks);
     } catch (err) {
       res.status(500).send({
         err: "An error has occured trying to load tasks",

@@ -1,8 +1,8 @@
 import Api from "@/services/Api";
 
 export default {
-  async post(load) {
-    const { data } = await Api().post("todos", load);
+  async post(todo) {
+    const { data } = await Api().post("todos", todo);
     return data;
   },
   async index(userId) {
