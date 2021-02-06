@@ -6,9 +6,10 @@ module.exports = {
     try {
       const tasks = await Task.findAll({
         where: { userId: req.params.userId },
+        order: [["createdAt", "DESC"]],
       }); //{limit: 10}
       const arrTasks = Object.assign([], tasks);
-      res.send(arrTasks.reverse());
+      res.send(arrTasks);
     } catch (err) {
       res.status(500).send({
         err: "An error has occured trying to load tasks",
@@ -52,7 +53,7 @@ module.exports = {
   async remove(req, res) {
     try {
       await Task.destroy({ where: { id: req.params.id } });
-      await res.sendStatus(204);
+      res.sendStatus(204);
     } catch (err) {
       res.status(500).send({
         err: "An error has occured trying to update the task",
